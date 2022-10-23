@@ -17,23 +17,25 @@ class ConfirmLoginScreen extends StatelessWidget {
         child: Center(
           child: Column(
             children: [
-              Text('Bentornato'),
+              const Text('Bentornato'),
               TextButton(
                   onPressed: (){
                     Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => const WebViewScreen()));
+                        MaterialPageRoute(builder: (context) => const WebViewExample()));
                   },
-                  child: Text('ESEGUI LOGIN',style: TextStyle(color: Colors.white)),
+                  
                 style: stileBottoni,
-              ),
+                child: const Text('ESEGUI LOGIN',style: TextStyle(color: Colors.white)),
+                              ),
               TextButton(
                   onPressed: (){
                     Navigator.push(context,
                       MaterialPageRoute(builder: (context) => const InputScreen(isFirstSetup: false,))
                     );
                   },
-                  child: Text('MODIFICA CREDENZIALI',style: TextStyle(color: Colors.white)),
                 style: stileBottoni,
+                  child: const Text('MODIFICA CREDENZIALI',style: TextStyle(color: Colors.white)),
+
               )
             ],
           ),
