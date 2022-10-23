@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 22
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -38,8 +38,8 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "me.arogen.app.serena_onlus_login"
         // You can update the following values to match your application needs. 
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        // For more inform2ation, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
+        minSdkVersion 22
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
