@@ -43,7 +43,7 @@ class _WebViewExampleState extends State<WebViewExample> {
           _controller.complete(webViewController);
           final WebViewRequest request = WebViewRequest(
             
-            uri: Uri.parse(link),
+            uri: Uri.parse('https://'+link),
             method: WebViewRequestMethod.post,
             headers: <String, String>{ 'Content-Type': 'text/plain'},
             body: Uint8List.fromList('ut_user=$utUser&ut_pwd=$utPwd'.codeUnits),

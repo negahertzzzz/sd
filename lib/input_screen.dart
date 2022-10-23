@@ -72,7 +72,9 @@ class _InputScreenState extends State<InputScreen> {
                       link = link.replaceAll('https://', '');
                       link = link.replaceAll('www.', '');
                       var response = await client.post(
-                          Uri.https(link.replaceRange(link.indexOf('/'), null, ''), link.replaceRange(0, link.indexOf('/'), '')),
+                          Uri.https(
+                              link.replaceRange(link.indexOf('/'), null, ''),
+                              link.replaceRange(0, link.indexOf('/'), '')),
                           body: {
                             'ut_user': userController.text,
                             'ut_pwd': pwdController.text
@@ -85,9 +87,9 @@ class _InputScreenState extends State<InputScreen> {
                             MaterialPageRoute(
                                 builder: (context) => const ConfermaLogin()));
                         var preferences = await SharedPreferences.getInstance();
-                        utUser = preferences.getString('ut_user') ?? '';
-                        utPwd = preferences.getString('ut_pwd') ?? '';
-                        link = preferences.getString('link') ?? '';        
+                        preferences.setString('ut_user', userController.text);
+                        preferences.setString('ut_pwd', pwdController.text);
+                        preferences.setString('link', link);
                       } else {
                         //Popup credenziali errate
                       }
