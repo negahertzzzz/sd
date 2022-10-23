@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:serena_onlus_login/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'styles.dart';
 import 'package:http/http.dart' as http;
 
@@ -66,23 +67,30 @@ class _InputScreenState extends State<InputScreen> {
                   if (widget.isFirstSetup) {
                     var client = http.Client();
                     try {
+                      var link = urlController.text;
+                      link = link.replaceAll('http://', '');
+                      link = link.replaceAll('https://', '');
+                      link = link.replaceAll('www.', '');
                       var response = await client.post(
-                          Uri.https('serena-onlus.com', 'mob/index.php'),
+                          Uri.https(link.replaceRange(link.indexOf('/'), null, ''), link.replaceRange(0, link.indexOf('/'), '')),
                           body: {
                             'ut_user': userController.text,
                             'ut_pwd': pwdController.text
                           });
                       print(response.body);
                       if (!response.body.contains("Credenziali errete")) {
+                        // ignore: use_build_context_synchronously
                         Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ConfermaLogin()));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const ConfermaLogin()));
+                        var preferences = await SharedPreferences.getInstance();
+                        utUser = preferences.getString('ut_user') ?? '';
+                        utPwd = preferences.getString('ut_pwd') ?? '';
+                        link = preferences.getString('link') ?? '';        
+                      } else {
+                        //Popup credenziali errate
                       }
-                      else{
-                        //Popup credenziali errate 
-                      }
-                      
                     } finally {
                       client.close();
                     }

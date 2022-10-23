@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -43,10 +43,10 @@ class _WebViewExampleState extends State<WebViewExample> {
           _controller.complete(webViewController);
           final WebViewRequest request = WebViewRequest(
             
-            uri: Uri.parse('https://serena-onlus.com/mob/index.php'),
+            uri: Uri.parse(link),
             method: WebViewRequestMethod.post,
             headers: <String, String>{ 'Content-Type': 'text/plain'},
-            body: Uint8List.fromList('ut_user=s&ut_pwd=s'.codeUnits),
+            body: Uint8List.fromList('ut_user=$utUser&ut_pwd=$utPwd'.codeUnits),
           );
           await webViewController.loadRequest(request);
         },
