@@ -44,6 +44,7 @@ class _InputScreenState extends State<InputScreen> {
           margin: const EdgeInsets.all(50),
           child: Column(
             children: [
+              const Image(image: AssetImage('s.jpg')),
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: TextField(
@@ -98,9 +99,14 @@ class _InputScreenState extends State<InputScreen> {
 
     if (!urlController.text.contains('https://') ||
         !urlController.text.contains('http://')) {
-      link = 'https://${urlController.text}';
+      if (urlController.text.contains('https://')) {
+        link = urlController.text;
+      } else if (urlController.text.contains('http://')) {
+        link = urlController.text;
+      } else {
+        link = 'https://${urlController.text}';
+      }
     }
-
     preferences.setString('ut_user', userController.text);
     preferences.setString('ut_pwd', pwdController.text);
     preferences.setString('link', link);

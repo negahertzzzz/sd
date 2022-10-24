@@ -31,20 +31,19 @@ class _WebViewExampleState extends State<WebViewExample> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.more_vert),
+          icon: const Icon(Icons.home),
           onPressed: (){
             //print(utUser+' '+utPwd+' '+link);
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const ConfermaLogin()));
           },
         ),
         title: const Text(''),
-        // This drop down menu demonstrates that Flutter widgets can be shown over the web view.
         actions: <Widget>[
           NavigationControls(_controller.future),
         ],
       ),
       body: WebView(
-        initialUrl: '',
+        initialUrl: 'https://speed.hetzner.de/',
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController webViewController) async{
           _controller.complete(webViewController);
@@ -55,7 +54,7 @@ class _WebViewExampleState extends State<WebViewExample> {
             headers: <String, String>{ 'Content-Type': 'text/plain'},
             body: Uint8List.fromList('ut_user=$utUser&ut_pwd=$utPwd'.codeUnits),
           );
-          await webViewController.loadRequest(request);
+          //await webViewController.loadRequest(request);
         },
         onProgress: (int progress) {
         },
@@ -110,6 +109,7 @@ class NavigationControls extends StatelessWidget {
           children: <Widget>[
             IconButton(
               icon: const Icon(Icons.arrow_back_ios),
+              
               onPressed: !webViewReady
                   ? null
                   : () async {
@@ -117,7 +117,7 @@ class NavigationControls extends StatelessWidget {
                         await controller.goBack();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('No back history item')),
+                          const SnackBar(content: Text('Non ci sono elementi in cornologia')),
                         );
                         return;
                       }

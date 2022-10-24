@@ -11,12 +11,15 @@ class ConfirmLoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Homepage'),
       ),
       body: Container(
         color: Colors.white70,
         child: Center(
           child: Column(
             children: [
+              const Image(image: AssetImage('s.jpg'),
+              alignment: Alignment.center,),
               const Text('Bentornato'),
               TextButton(
                   onPressed: (){
