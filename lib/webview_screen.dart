@@ -70,13 +70,8 @@ class _WebViewExampleState extends State<WebViewExample> {
           },
           onPageStarted: (String url) {
 
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return const Center(child: CircularProgressIndicator());
-                });},
+          },
           onPageFinished: (String url) {
-            Navigator.of(context, rootNavigator: true).pop();
           },
           gestureNavigationEnabled: true,
           backgroundColor: const Color(0x00000000),

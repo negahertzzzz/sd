@@ -26,10 +26,10 @@ void main() async {
     runApp(const InsertimentoDati());
   } else {
     //tutto presente e ti apro la pagina per confermarti il login
-    if(await checkLogin(utUser, utPwd, link)){
-      runApp(const InsertimentoDati());
-      loginError( BuildContext);
-    }
+    //if(await checkLogin(utUser, utPwd, link)){
+      //runApp(const InsertimentoDati());
+      //loginError( BuildContext);
+    //}
     runApp(const ConfermaLogin());
   }
 }
