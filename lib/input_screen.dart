@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:serena_onlus_login/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'styles.dart';
-//import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http;
 
 class InputScreen extends StatefulWidget {
   const InputScreen({Key? key, required this.isFirstSetup}) : super(key: key);
@@ -70,20 +71,45 @@ class _InputScreenState extends State<InputScreen> {
               ),
               TextButton(
                 onPressed: () async {
+                  bool result = await InternetConnectionChecker().hasConnection;
+                  print(result);
+                  if (result == false) {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const AlertDialog(
+                            title: Text("Errore"),
+                            content: Text(
+                                "Attenzione connessione internet assente "),
+                          );
+                        });
+                    return;
+                  }
                   if (widget.isFirstSetup) {
-                    salvaCredenziali();
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: ((context) => const ConfermaLogin())));
+                    if (await checkLogin(userController.text,
+                        pwdController.text, urlController.text)) {
+                      salvaCredenziali();
+                      // ignore: use_build_context_synchronously
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => const ConfermaLogin())));
+                    } else {
+                      loginError(context);
+                    }
                   } else {
-                    salvaCredenziali();
-                    Navigator.pop(context);
+                    if (await checkLogin(userController.text,
+                        pwdController.text, urlController.text)) {
+                      salvaCredenziali();
+                      Navigator.pop(context);
+                    } else {
+                      loginError(context);
+                    }
                   }
                 },
                 style: stileBottoni,
                 child: const Text(
-                  'SALVA',
+                  'Salva Modifiche',
                   style: TextStyle(color: Colors.white),
                 ),
               )
@@ -114,4 +140,36 @@ class _InputScreenState extends State<InputScreen> {
     utPwd = pwdController.text;
     //link = urlController.text;
   }
+}
+
+Future<bool> checkLogin(user, pwd, link) async {
+  try {
+    var client = http.Client();
+    link = link
+        .replaceAll('http://', '')
+        .replaceAll('https://', '')
+        .replaceAll('www.', '');
+    var response = await client.post(
+        Uri.https(link.replaceRange(link.indexOf('/'), null, ''),
+            link.replaceRange(0, link.indexOf('/'), '')),
+        body: {'ut_user': user, 'ut_pwd': pwd});
+    if (response.body.contains('Benvenuto')) {
+      return true;
+    }
+    return false;
+  } catch (Exeption) {
+    return false;
+  }
+}
+
+void loginError(context) {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return const AlertDialog(
+          title: Text("Errore"),
+          content: Text(
+              "Attenzione hai inserito delle credenziali non valide, riprova"),
+        );
+      });
 }
