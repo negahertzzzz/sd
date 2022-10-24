@@ -31,10 +31,10 @@ class _WebViewExampleState extends State<WebViewExample> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.more_vert),
+          icon: const Icon(Icons.more_vert),
           onPressed: (){
-            print(utUser+' '+utPwd+' '+link);
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ConfermaLogin()));
+            //print(utUser+' '+utPwd+' '+link);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const ConfermaLogin()));
           },
         ),
         title: const Text(''),
