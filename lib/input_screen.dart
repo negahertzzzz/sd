@@ -21,6 +21,9 @@ class _InputScreenState extends State<InputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    userController.text = utUser;
+    pwdController.text = utPwd;
+    urlController.text = link;
     return Scaffold(
       appBar: AppBar(
         leading: widget.isFirstSetup
@@ -51,6 +54,7 @@ class _InputScreenState extends State<InputScreen> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: TextField(
+                  obscureText: true,
                   controller: pwdController,
                   decoration: const InputDecoration(labelText: 'password'),
                 ),
@@ -65,38 +69,12 @@ class _InputScreenState extends State<InputScreen> {
               TextButton(
                 onPressed: () async {
                   if (widget.isFirstSetup) {
-                    var client = http.Client();
-                    try {
-                      var link = urlController.text;
-                      link = link.replaceAll('http://', '');
-                      link = link.replaceAll('https://', '');
-                      link = link.replaceAll('www.', '');
-                      var response = await client.post(
-                          Uri.https(
-                              link.replaceRange(link.indexOf('/'), null, ''),
-                              link.replaceRange(0, link.indexOf('/'), '')),
-                          body: {
-                            'ut_user': userController.text,
-                            'ut_pwd': pwdController.text
-                          });
-                      print(response.body);
-                      if (!response.body.contains("Credenziali errete")) {
-                        // ignore: use_build_context_synchronously
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ConfermaLogin()));
-                        var preferences = await SharedPreferences.getInstance();
-                        preferences.setString('ut_user', userController.text);
-                        preferences.setString('ut_pwd', pwdController.text);
-                        preferences.setString('link', link);
-                      } else {
-                        //Popup credenziali errate
-                      }
-                    } finally {
-                      client.close();
-                    }
+                    salvaCredenziali();
+                    Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: ((context) => ConfermaLogin()))
+                    );
                   } else {
+                    salvaCredenziali();
                     Navigator.pop(context);
                   }
                 },
@@ -111,5 +89,15 @@ class _InputScreenState extends State<InputScreen> {
         ),
       ),
     );
+  }
+
+  void salvaCredenziali()async{
+    var preferences = await SharedPreferences.getInstance();
+    preferences.setString('ut_user', userController.text);
+    preferences.setString('ut_pwd', pwdController.text);
+    preferences.setString('link', link);
+    utUser = userController.text;
+    utPwd = pwdController.text;
+    link = urlController.text;
   }
 }

@@ -30,6 +30,13 @@ class _WebViewExampleState extends State<WebViewExample> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.more_vert),
+          onPressed: (){
+            print(utUser+' '+utPwd+' '+link);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ConfermaLogin()));
+          },
+        ),
         title: const Text(''),
         // This drop down menu demonstrates that Flutter widgets can be shown over the web view.
         actions: <Widget>[
@@ -43,7 +50,7 @@ class _WebViewExampleState extends State<WebViewExample> {
           _controller.complete(webViewController);
           final WebViewRequest request = WebViewRequest(
             
-            uri: Uri.parse('https://'+link),
+            uri: Uri.parse(link),
             method: WebViewRequestMethod.post,
             headers: <String, String>{ 'Content-Type': 'text/plain'},
             body: Uint8List.fromList('ut_user=$utUser&ut_pwd=$utPwd'.codeUnits),

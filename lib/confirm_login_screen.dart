@@ -21,7 +21,8 @@ class ConfirmLoginScreen extends StatelessWidget {
               TextButton(
                   onPressed: (){
                     Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => const WebViewExample()));
+                        MaterialPageRoute(builder: (context) => const WebViewExample())
+                    );
                   },
                   
                 style: stileBottoni,
