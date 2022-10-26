@@ -27,6 +27,7 @@ class _InputScreenState extends State<InputScreen> {
     urlController.text = link;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: coloreAppBar,
         leading: widget.isFirstSetup
             ? Container()
             : IconButton(
@@ -69,48 +70,51 @@ class _InputScreenState extends State<InputScreen> {
                   decoration: const InputDecoration(labelText: 'Url'),
                 ),
               ),
-              TextButton(
-                onPressed: () async {
-                  bool result = await InternetConnectionChecker().hasConnection;
-                  print(result);
-                  if (result == false) {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const AlertDialog(
-                            title: Text("Errore"),
-                            content: Text(
-                                "Attenzione connessione internet assente "),
-                          );
-                        });
-                    return;
-                  }
-                  if (widget.isFirstSetup) {
-                    if (await checkLogin(userController.text,
-                        pwdController.text, urlController.text)) {
-                      salvaCredenziali();
-                      // ignore: use_build_context_synchronously
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) => const ConfermaLogin())));
-                    } else {
-                      loginError(context);
+              Container(
+                width: 200,
+                child: TextButton(
+                  onPressed: () async {
+                    bool result = await InternetConnectionChecker().hasConnection;
+                    print(result);
+                    if (result == false) {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const AlertDialog(
+                              title: Text("Errore"),
+                              content: Text(
+                                  "Attenzione connessione internet assente "),
+                            );
+                          });
+                      return;
                     }
-                  } else {
-                    if (await checkLogin(userController.text,
-                        pwdController.text, urlController.text)) {
-                      salvaCredenziali();
-                      Navigator.pop(context);
+                    if (widget.isFirstSetup) {
+                      if (await checkLogin(userController.text,
+                          pwdController.text, urlController.text)) {
+                        salvaCredenziali();
+                        // ignore: use_build_context_synchronously
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => const ConfermaLogin())));
+                      } else {
+                        loginError(context);
+                      }
                     } else {
-                      loginError(context);
+                      if (await checkLogin(userController.text,
+                          pwdController.text, urlController.text)) {
+                        salvaCredenziali();
+                        Navigator.pop(context);
+                      } else {
+                        loginError(context);
+                      }
                     }
-                  }
-                },
-                style: stileBottoni,
-                child: const Text(
-                  'Salva Modifiche',
-                  style: TextStyle(color: Colors.white),
+                  },
+                  style: stileBottoni,
+                  child: const Text(
+                    'Salva Modifiche',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               )
             ],
