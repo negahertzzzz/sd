@@ -19,6 +19,7 @@ class WebViewExample extends StatefulWidget {
 class _WebViewExampleState extends State<WebViewExample> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
+  var url2 = '';
   
   @override
   Widget build(BuildContext context) {
@@ -53,28 +54,25 @@ class _WebViewExampleState extends State<WebViewExample> {
               body:
                   Uint8List.fromList('ut_user=$utUser&ut_pwd=$utPwd'.codeUnits),
             );
-            await webViewController.loadRequest(request);
+            //await webViewController.loadRequest(request);
           },
           onProgress: (int progress) {
-            print(progress);
-            if(progress == 100){
-              
-            }
             
           },
           javascriptChannels: <JavascriptChannel>{
             _toasterJavascriptChannel(context),
           },
           navigationDelegate: (NavigationRequest request) {
+            
+            url2 = request.url;
             if (request.url.startsWith('')) {
               return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;
           },
-          onPageStarted: (String url) {
-
-          },
+          onPageStarted: (String url) {},
           onPageFinished: (String url) {
+            
           },
           gestureNavigationEnabled: true,
           backgroundColor: const Color(0x00000000),

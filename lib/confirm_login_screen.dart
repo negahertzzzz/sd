@@ -24,7 +24,7 @@ class ConfirmLoginScreen extends StatelessWidget {
                 image: AssetImage('s.jpg'),
                 alignment: Alignment.center,
               ),
-              Container(
+              SizedBox(
                 width: 200,
                 child: TextButton(
                   onPressed: () async {
@@ -52,7 +52,7 @@ class ConfirmLoginScreen extends StatelessWidget {
                       style: TextStyle(color: Colors.white)),
                 ),
               ),
-              Container(
+              SizedBox(
                 width: 200,
                 child: TextButton(
                   onPressed: () {

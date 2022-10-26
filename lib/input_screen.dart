@@ -70,12 +70,12 @@ class _InputScreenState extends State<InputScreen> {
                   decoration: const InputDecoration(labelText: 'Url'),
                 ),
               ),
-              Container(
+              SizedBox(
                 width: 200,
                 child: TextButton(
                   onPressed: () async {
                     bool result = await InternetConnectionChecker().hasConnection;
-                    print(result);
+
                     if (result == false) {
                       showDialog(
                           context: context,
@@ -98,14 +98,17 @@ class _InputScreenState extends State<InputScreen> {
                             MaterialPageRoute(
                                 builder: ((context) => const ConfermaLogin())));
                       } else {
+                        // ignore: use_build_context_synchronously
                         loginError(context);
                       }
                     } else {
                       if (await checkLogin(userController.text,
                           pwdController.text, urlController.text)) {
                         salvaCredenziali();
+                        // ignore: use_build_context_synchronously
                         Navigator.pop(context);
                       } else {
+                        // ignore: use_build_context_synchronously
                         loginError(context);
                       }
                     }
@@ -161,7 +164,7 @@ Future<bool> checkLogin(user, pwd, link) async {
       return true;
     }
     return false;
-  } catch (Exeption) {
+  } on Exception catch (_) {
     return false;
   }
 }
