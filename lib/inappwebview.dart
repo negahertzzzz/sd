@@ -91,10 +91,11 @@ class _MyAppState extends State<MyAppa> {
                 InAppWebView(
                   key: webViewKey,
                   initialUrlRequest: URLRequest(
-                    url: Uri.parse(link),
-                    body: Uint8List.fromList(
-                        'ut_user=$utUser&ut_pwd=$utPwd'.codeUnits),
-                  ),
+                  url: Uri.parse(link),
+                  method:'POST' ,
+                  headers: <String, String>{'Content-Type': 'text/plain'},
+                  body: Uint8List.fromList('ut_user=$utUser&ut_pwd=$utPwd'.codeUnits),
+                ),
                   initialOptions: options,
                   pullToRefreshController: pullToRefreshController,
                   onWebViewCreated: (controller) {
