@@ -85,6 +85,7 @@ class _WebViewExampleState extends State<WebViewRegistroProfessori> {
             },
             navigationDelegate: (NavigationRequest request) {
               print(request.url);
+              
               if (request.url.contains(".pdf") ||
                   request.url.contains(".zip")) {
                 download(request.url, request.url.split("/").last);

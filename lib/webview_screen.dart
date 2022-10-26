@@ -50,8 +50,7 @@ class _WebViewExampleState extends State<WebViewExample> {
               uri: Uri.parse(link),
               method: WebViewRequestMethod.post,
               headers: <String, String>{'Content-Type': 'text/plain'},
-              body:
-                  Uint8List.fromList('ut_user=$utUser&ut_pwd=$utPwd'.codeUnits),
+              body: Uint8List.fromList('ut_user=$utUser&ut_pwd=$utPwd'.codeUnits),
             );
             await webViewController.loadRequest(request);
           },

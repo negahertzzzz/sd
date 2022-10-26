@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'input_screen.dart';
@@ -16,6 +17,11 @@ void main() async {
   utUser = preferences.getString('ut_user') ?? '';
   utPwd = preferences.getString('ut_pwd') ?? '';
   link = preferences.getString('link') ?? '';
+
+  await FlutterDownloader.initialize(
+    debug: true, // optional: set to false to disable printing logs to console (default: true)
+    ignoreSsl: true // option: set to false to disable working with http links (default: false)
+  );
 
   //fine acquisizione
   //Controllo presenza dati utente e reindirizzazione
