@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
-
 import 'package:serena_onlus_login/styles.dart';
-
 import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -20,7 +18,8 @@ class _WebViewExampleState extends State<WebViewExample> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
   var url2 = '';
-  
+  var s = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +41,7 @@ class _WebViewExampleState extends State<WebViewExample> {
           ],
         ),
         body: WebView(
-          initialUrl: 'https://speed.hetzner.de/',
+          initialUrl: 'https://www.google.com/',
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) async {
             _controller.complete(webViewController);
@@ -54,25 +53,27 @@ class _WebViewExampleState extends State<WebViewExample> {
               body:
                   Uint8List.fromList('ut_user=$utUser&ut_pwd=$utPwd'.codeUnits),
             );
-            //await webViewController.loadRequest(request);
+            await webViewController.loadRequest(request);
           },
           onProgress: (int progress) {
-            
+            print(progress);
           },
           javascriptChannels: <JavascriptChannel>{
             _toasterJavascriptChannel(context),
           },
           navigationDelegate: (NavigationRequest request) {
-            
-            url2 = request.url;
+            print(request.url);
             if (request.url.startsWith('')) {
               return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;
           },
-          onPageStarted: (String url) {},
+          onPageStarted: (String url) {
+            print(url);
+            s = s + 1;
+          },
           onPageFinished: (String url) {
-            
+            print(url);
           },
           gestureNavigationEnabled: true,
           backgroundColor: const Color(0x00000000),

@@ -54,35 +54,3 @@ class ConfermaLogin extends StatelessWidget {
     return const MaterialApp(home: ConfirmLoginScreen());
   }
 }
-
-Future<bool> checkLogin(user, pwd, link) async {
-  try{
-      var client = http.Client();
-      link = link
-          .replaceAll('http://', '')
-          .replaceAll('https://', '')
-          .replaceAll('www.', '');
-      var response = await client.post(
-          Uri.https(link.replaceRange(link.indexOf('/'), null, ''),
-              link.replaceRange(0, link.indexOf('/'), '')),
-          body: {'ut_user': user, 'ut_pwd': pwd});
-      if (response.body.contains('Benvenuto')) {
-        return true;
-      }
-      return false;
-}catch(Exeption){
-  return false;
-}
-}
-
-void loginError(context) {
-  showDialog(
-      context: context,
-      builder: (context) {
-        return const AlertDialog(
-          title: Text("Errore"),
-          content: Text(
-              "Attenzione hai inserito delle credenziali non valide, riprova"),
-        );
-      });
-}

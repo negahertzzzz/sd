@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:serena_onlus_login/input_screen.dart';
 import 'styles.dart';
+import 'webPage.dart';
 import 'webview_screen.dart';
 
 class ConfirmLoginScreen extends StatelessWidget {
@@ -45,7 +46,7 @@ class ConfirmLoginScreen extends StatelessWidget {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const WebViewExample()));
+                            builder: (context) => const /*WebViewExample()*/WebViewRegistroProfessori()));
                   },
                   style: stileBottoni,
                   child: const Text('ESEGUI LOGIN',
