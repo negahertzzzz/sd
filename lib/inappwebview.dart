@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:serena_onlus_login/styles.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'main.dart';
@@ -24,6 +27,11 @@ class MyAppa extends StatefulWidget {
 
 class _MyAppState extends State<MyAppa> {
   final GlobalKey webViewKey = GlobalKey();
+
+  static void downloadCallback(
+      String id, DownloadTaskStatus status, int progress) {
+    print([id, status, progress]);
+  }
 
   InAppWebViewController? webViewController;
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
@@ -70,32 +78,37 @@ class _MyAppState extends State<MyAppa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Official InAppWebView website")),
-        body: SafeArea(
-            child: Column(children: <Widget>[
-          TextField(
-            decoration: InputDecoration(prefixIcon: Icon(Icons.search)),
-            controller: urlController,
-            keyboardType: TextInputType.url,
-            onSubmitted: (value) {
-              var url = Uri.parse(value);
-              if (url.scheme.isEmpty) {
-                url = Uri.parse("https://www.google.com/search?q=" + value);
-              }
-              webViewController?.loadUrl(urlRequest: URLRequest(url: url));
+        appBar: AppBar(
+          backgroundColor: coloreAppBar,
+          leading: IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              //print(utUser+' '+utPwd+' '+link);
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ConfermaLogin()));
             },
           ),
+          title: const Text(''),
+          actions: <Widget>[
+            NavigationControls(webViewController),
+          ],
+        ),
+        body: SafeArea(
+            child: Column(children: <Widget>[
           Expanded(
             child: Stack(
               children: [
                 InAppWebView(
                   key: webViewKey,
                   initialUrlRequest: URLRequest(
-                  url: Uri.parse(link),
-                  method:'POST' ,
-                  headers: <String, String>{'Content-Type': 'text/plain'},
-                  body: Uint8List.fromList('ut_user=$utUser&ut_pwd=$utPwd'.codeUnits),
-                ),
+                    url: Uri.parse('www.google.com'),
+                    method: 'POST',
+                    headers: <String, String>{'Content-Type': 'text/plain'},
+                    body: Uint8List.fromList(
+                        'ut_user=$utUser&ut_pwd=$utPwd'.codeUnits),
+                  ),
                   initialOptions: options,
                   pullToRefreshController: pullToRefreshController,
                   onWebViewCreated: (controller) {
@@ -168,30 +181,42 @@ class _MyAppState extends State<MyAppa> {
                   },
                   onDownloadStartRequest:
                       (controller, downloadStartRequest) async {
-                    print("onDownloadSsdasdatart $downloadStartRequest");
-                    
-                    final taskId = await FlutterDownloader.enqueue(
-                      url: downloadStartRequest.url.toString(),
-                      savedDir:
-                          (await getApplicationDocumentsDirectory()).path,
-                      showNotification:
-                          true, // show download progress in status bar (for Android)
-                      openFileFromNotification:
-                          true, // click on notification to open downloaded file (for Android)
-                    );
-                  },/*
-                  onDownloadStart: (controller, url) async {
-                    print("onDownloadStart $url");
-                    final taskId = await FlutterDownloader.enqueue(
-                      url: url.toString(),
-                      savedDir:
-                          (await getApplicationDocumentsDirectory())!.path,
-                      showNotification:
-                          true, // show download progress in status bar (for Android)
-                      openFileFromNotification:
-                          true, // click on notification to open downloaded file (for Android)
-                    );
-                  },*/
+                    var status = await Permission.storage.status;
+
+                    if (!status.isGranted) {
+                      await Permission.storage.request();
+                    }
+                    FlutterDownloader.registerCallback(downloadCallback);
+                    if (Platform.isAndroid) {
+                      Directory? tempDir =
+                          await DownloadsPathProvider.downloadsDirectory;
+                      final taskId = await FlutterDownloader.enqueue(
+                        url: downloadStartRequest.url.toString(),
+                        savedDir: /*(await getApplicationDocumentsDirectory()).path*/ tempDir!
+                            .path,
+                        showNotification:
+                            true, // show download progress in status bar (for Android)
+                        openFileFromNotification:
+                            true, // click on notification to open downloaded file (for Android)
+                      );
+                    } else {
+                      Directory documents =
+                          await getApplicationDocumentsDirectory();
+                      final taskId = await FlutterDownloader.enqueue(
+                        url: downloadStartRequest.url.toString(),
+                        savedDir: /*(await getApplicationDocumentsDirectory()).path*/ documents
+                            .path,
+                        showNotification:
+                            true, // show download progress in status bar (for Android)
+                        openFileFromNotification:
+                            true, // click on notification to open downloaded file (for Android)
+                      );
+                    }
+
+                    //print(tempDir!.path);
+                    /*print("onDownloadSsdasdatart: " +
+                        (await getApplicationDocumentsDirectory()).path);*/
+                  },
                 ),
                 progress < 1.0
                     ? LinearProgressIndicator(value: progress)
@@ -223,5 +248,71 @@ class _MyAppState extends State<MyAppa> {
             ],
           ),
         ])));
+  }
+}
+
+class NavigationControls extends StatelessWidget {
+  const NavigationControls(this._webViewControllerFuture, {Key? key})
+      : super(key: key);
+
+  final InAppWebViewController? _webViewControllerFuture;
+  
+  @override
+  Widget build(BuildContext context) {
+    //Future<InAppWebViewController> webController = _webViewControllerFuture as Future<InAppWebViewController>;
+    return FutureBuilder<InAppWebViewController>(
+      //future: webController,
+      builder: (BuildContext context,
+          AsyncSnapshot<InAppWebViewController> snapshot) {
+        final bool webViewReady =
+            snapshot.connectionState == ConnectionState.done;
+        final InAppWebViewController? controller = snapshot.data;
+        return Row(
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: !webViewReady
+                  ? null
+                  : () async {
+                      if (await controller!.canGoBack()) {
+                        await controller.goBack();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content:
+                                  Text('Non ci sono elementi in cornologia')),
+                        );
+                        return;
+                      }
+                    },
+            ),
+            IconButton(
+              icon: const Icon(Icons.arrow_forward_ios),
+              onPressed: !webViewReady
+                  ? null
+                  : () async {
+                      if (await controller!.canGoForward()) {
+                        await controller.goForward();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('No forward history item')),
+                        );
+                        return;
+                      }
+                    },
+            ),
+            IconButton(
+              icon: const Icon(Icons.replay),
+              onPressed: !webViewReady
+                  ? null
+                  : () {
+                      controller!.reload();
+                    },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
