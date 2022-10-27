@@ -92,7 +92,9 @@ class _MyAppState extends State<MyAppa> {
           ),
           title: const Text(''),
           actions: <Widget>[
-            NavigationControls(webViewController),
+            IconButton(onPressed: (){webViewController?.goBack();}, icon: Icon(Icons.arrow_back_ios)),
+            IconButton(onPressed: (){webViewController?.goForward();}, icon: Icon(Icons.arrow_forward_ios)),
+            IconButton(onPressed: (){webViewController?.reload();}, icon: Icon(Icons.refresh))
           ],
         ),
         body: SafeArea(
@@ -223,29 +225,6 @@ class _MyAppState extends State<MyAppa> {
                     : Container(),
               ],
             ),
-          ),
-          ButtonBar(
-            alignment: MainAxisAlignment.center,
-            children: <Widget>[
-              ElevatedButton(
-                child: Icon(Icons.arrow_back),
-                onPressed: () {
-                  webViewController?.goBack();
-                },
-              ),
-              ElevatedButton(
-                child: Icon(Icons.arrow_forward),
-                onPressed: () {
-                  webViewController?.goForward();
-                },
-              ),
-              ElevatedButton(
-                child: Icon(Icons.refresh),
-                onPressed: () {
-                  webViewController?.reload();
-                },
-              ),
-            ],
           ),
         ])));
   }

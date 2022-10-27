@@ -44,83 +44,85 @@ class _InputScreenState extends State<InputScreen> {
           padding:
               const EdgeInsets.only(left: 9, right: 9, top: 12, bottom: 12),
           margin: const EdgeInsets.all(50),
-          child: Column(
-            children: [
-              const Image(image: AssetImage('s.jpg')),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: TextField(
-                  controller: userController,
-                  decoration: const InputDecoration(labelText: 'Username'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: TextField(
-                  obscureText: true,
-                  controller: pwdController,
-                  decoration: const InputDecoration(labelText: 'Password'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: TextField(
-                  autocorrect: false,
-                  controller: urlController,
-                  decoration: const InputDecoration(labelText: 'Url'),
-                ),
-              ),
-              SizedBox(
-                width: 200,
-                child: TextButton(
-                  onPressed: () async {
-                    bool result = await InternetConnectionChecker().hasConnection;
-
-                    if (result == false) {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const AlertDialog(
-                              title: Text("Errore"),
-                              content: Text(
-                                  "Attenzione connessione internet assente "),
-                            );
-                          });
-                      return;
-                    }
-                    if (widget.isFirstSetup) {
-                      if (await checkLogin(userController.text,
-                          pwdController.text, urlController.text)) {
-                        salvaCredenziali();
-                        // ignore: use_build_context_synchronously
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: ((context) => const ConfermaLogin())));
-                      } else {
-                        // ignore: use_build_context_synchronously
-                        loginError(context);
-                      }
-                    } else {
-                      if (await checkLogin(userController.text,
-                          pwdController.text, urlController.text)) {
-                        salvaCredenziali();
-                        // ignore: use_build_context_synchronously
-                        Navigator.pop(context);
-                      } else {
-                        // ignore: use_build_context_synchronously
-                        loginError(context);
-                      }
-                    }
-                  },
-                  style: stileBottoni,
-                  child: const Text(
-                    'Salva Modifiche',
-                    style: TextStyle(color: Colors.white),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const Image(image: AssetImage('s.jpg')),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: TextField(
+                    controller: userController,
+                    decoration: const InputDecoration(labelText: 'Username'),
                   ),
                 ),
-              )
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: TextField(
+                    obscureText: true,
+                    controller: pwdController,
+                    decoration: const InputDecoration(labelText: 'Password'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: TextField(
+                    autocorrect: false,
+                    controller: urlController,
+                    decoration: const InputDecoration(labelText: 'Url'),
+                  ),
+                ),
+                SizedBox(
+                  width: 200,
+                  child: TextButton(
+                    onPressed: () async {
+                      bool result = await InternetConnectionChecker().hasConnection;
+
+                      if (result == false) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const AlertDialog(
+                                title: Text("Errore"),
+                                content: Text(
+                                    "Attenzione connessione internet assente "),
+                              );
+                            });
+                        return;
+                      }
+                      if (widget.isFirstSetup) {
+                        if (await checkLogin(userController.text,
+                            pwdController.text, urlController.text)) {
+                          salvaCredenziali();
+                          // ignore: use_build_context_synchronously
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => const ConfermaLogin())));
+                        } else {
+                          // ignore: use_build_context_synchronously
+                          loginError(context);
+                        }
+                      } else {
+                        if (await checkLogin(userController.text,
+                            pwdController.text, urlController.text)) {
+                          salvaCredenziali();
+                          // ignore: use_build_context_synchronously
+                          Navigator.pop(context);
+                        } else {
+                          // ignore: use_build_context_synchronously
+                          loginError(context);
+                        }
+                      }
+                    },
+                    style: stileBottoni,
+                    child: const Text(
+                      'Salva Modifiche',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
