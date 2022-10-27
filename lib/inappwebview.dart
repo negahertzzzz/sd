@@ -103,7 +103,7 @@ class _MyAppState extends State<MyAppa> {
                 InAppWebView(
                   key: webViewKey,
                   initialUrlRequest: URLRequest(
-                    url: Uri.parse('www.google.com'),
+                    url: Uri.parse(link),
                     method: 'POST',
                     headers: <String, String>{'Content-Type': 'text/plain'},
                     body: Uint8List.fromList(
