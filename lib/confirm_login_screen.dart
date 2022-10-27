@@ -3,8 +3,6 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:serena_onlus_login/input_screen.dart';
 import 'inappwebview.dart';
 import 'styles.dart';
-import 'webPage.dart';
-import 'webview_screen.dart';
 
 class ConfirmLoginScreen extends StatelessWidget {
   const ConfirmLoginScreen({Key? key}) : super(key: key);
@@ -47,7 +45,7 @@ class ConfirmLoginScreen extends StatelessWidget {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => MyAppa()));
+                            builder: (context) => const MyAppa()));
                   },
                   style: stileBottoni,
                   child: const Text('ESEGUI LOGIN',

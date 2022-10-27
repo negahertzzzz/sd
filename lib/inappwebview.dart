@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +22,11 @@ Future main() async {
 }
 
 class MyAppa extends StatefulWidget {
+  const MyAppa({super.key});
+
   @override
-  _MyAppState createState() => new _MyAppState();
+  // ignore: library_private_types_in_public_api
+  _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyAppa> {
@@ -30,7 +34,7 @@ class _MyAppState extends State<MyAppa> {
 
   static void downloadCallback(
       String id, DownloadTaskStatus status, int progress) {
-    print([id, status, progress]);
+    //print([id, status, progress]);
   }
 
   InAppWebViewController? webViewController;
@@ -92,9 +96,21 @@ class _MyAppState extends State<MyAppa> {
           ),
           title: const Text(''),
           actions: <Widget>[
-            IconButton(onPressed: (){webViewController?.goBack();}, icon: Icon(Icons.arrow_back_ios)),
-            IconButton(onPressed: (){webViewController?.goForward();}, icon: Icon(Icons.arrow_forward_ios)),
-            IconButton(onPressed: (){webViewController?.reload();}, icon: Icon(Icons.refresh))
+            IconButton(
+                onPressed: () {
+                  webViewController?.goBack();
+                },
+                icon: const Icon(Icons.arrow_back_ios)),
+            IconButton(
+                onPressed: () {
+                  webViewController?.goForward();
+                },
+                icon: const Icon(Icons.arrow_forward_ios)),
+            IconButton(
+                onPressed: () {
+                  webViewController?.reload();
+                },
+                icon: const Icon(Icons.refresh))
           ],
         ),
         body: SafeArea(
@@ -105,7 +121,7 @@ class _MyAppState extends State<MyAppa> {
                 InAppWebView(
                   key: webViewKey,
                   initialUrlRequest: URLRequest(
-                    url: Uri.parse('www.google.it'),
+                    url: Uri.parse(link),
                     method: 'POST',
                     headers: <String, String>{'Content-Type': 'text/plain'},
                     body: Uint8List.fromList(
@@ -141,10 +157,10 @@ class _MyAppState extends State<MyAppa> {
                       "javascript",
                       "about"
                     ].contains(uri.scheme)) {
-                      if (await canLaunch(url)) {
+                      if (await canLaunchUrl(Uri.parse(url))) {
                         // Launch the App
-                        await launch(
-                          url,
+                        await launchUrl(
+                          Uri.parse(url),
                         );
                         // and cancel the request
                         return NavigationActionPolicy.CANCEL;
@@ -169,7 +185,7 @@ class _MyAppState extends State<MyAppa> {
                     }
                     setState(() {
                       this.progress = progress / 100;
-                      urlController.text = this.url;
+                      urlController.text = url;
                     });
                   },
                   onUpdateVisitedHistory: (controller, url, androidIsReload) {
@@ -179,7 +195,7 @@ class _MyAppState extends State<MyAppa> {
                     });
                   },
                   onConsoleMessage: (controller, consoleMessage) {
-                    print(consoleMessage);
+                    //print(consoleMessage);
                   },
                   onDownloadStartRequest:
                       (controller, downloadStartRequest) async {
@@ -188,12 +204,27 @@ class _MyAppState extends State<MyAppa> {
                     if (!status.isGranted) {
                       await Permission.storage.request();
                     }
+                    var rng = Random();
+
                     FlutterDownloader.registerCallback(downloadCallback);
                     if (Platform.isAndroid) {
                       Directory? tempDir =
                           await DownloadsPathProvider.downloadsDirectory;
+                      var count = 0;
+                      var fileName = downloadStartRequest.suggestedFilename!;
+                      var tmpfileName = fileName;
+                      while (await File('${tempDir!.path}/$tmpfileName').exists()) {
+                        if (count > 0) {
+                          tmpfileName = fileName;
+                        }
+                        tmpfileName = '${'($count'})$fileName';
+                        count++;
+                      }
+                      fileName = tmpfileName;
+
                       final taskId = await FlutterDownloader.enqueue(
                         url: downloadStartRequest.url.toString(),
+                        fileName: fileName,
                         savedDir: /*(await getApplicationDocumentsDirectory()).path*/ tempDir!
                             .path,
                         showNotification:
@@ -235,7 +266,7 @@ class NavigationControls extends StatelessWidget {
       : super(key: key);
 
   final InAppWebViewController? _webViewControllerFuture;
-  
+
   @override
   Widget build(BuildContext context) {
     //Future<InAppWebViewController> webController = _webViewControllerFuture as Future<InAppWebViewController>;
