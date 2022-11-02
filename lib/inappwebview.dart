@@ -127,6 +127,8 @@ class _MyAppState extends State<MyAppa> {
                   pullToRefreshController: pullToRefreshController,
                   onWebViewCreated: (controller) {
                     webViewController = controller;
+                    if(Platform.isIOS)
+                      controller.postUrl(url: Uri.parse(link), postData: payload);
                   },
                   onLoadStart: (controller, url) {
                     setState(() {
