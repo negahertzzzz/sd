@@ -90,28 +90,17 @@ class _InputScreenState extends State<InputScreen> {
                         return;
                       }
                       if (widget.isFirstSetup) {
-                        if (await checkLogin(userController.text,
-                            pwdController.text, urlController.text)) {
-                          salvaCredenziali();
-                          // ignore: use_build_context_synchronously
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: ((context) => const ConfermaLogin())));
-                        } else {
-                          // ignore: use_build_context_synchronously
-                          loginError(context);
-                        }
+                        salvaCredenziali();
+                        // ignore: use_build_context_synchronously
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => const ConfermaLogin())));
+
                       } else {
-                        if (await checkLogin(userController.text,
-                            pwdController.text, urlController.text)) {
-                          salvaCredenziali();
-                          // ignore: use_build_context_synchronously
-                          Navigator.pop(context);
-                        } else {
-                          // ignore: use_build_context_synchronously
-                          loginError(context);
-                        }
+                        salvaCredenziali();
+                        // ignore: use_build_context_synchronously
+                        Navigator.pop(context);
                       }
                     },
                     style: stileBottoni,

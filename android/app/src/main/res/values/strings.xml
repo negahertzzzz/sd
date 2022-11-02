@@ -1,5 +1,5 @@
 <resources>
-    <string name="flutter_downloader_notification_started">Download Inziato</string>
+    <string name="flutter_downloader_notification_started">Download inziato</string>
     <string name="flutter_downloader_notification_in_progress">Download in corso</string>
     <string name="flutter_downloader_notification_canceled">Download cancellato</string>
     <string name="flutter_downloader_notification_failed">Download fallito</string>

@@ -25,7 +25,7 @@ class ConfirmLoginScreen extends StatelessWidget {
                 alignment: Alignment.center,
               ),
               SizedBox(
-                width: 200,
+                width: 300,
                 child: TextButton(
                   onPressed: () async {
                     bool result = await InternetConnectionChecker().hasConnection;
@@ -48,10 +48,11 @@ class ConfirmLoginScreen extends StatelessWidget {
                             builder: (context) => const MyAppa()));
                   },
                   style: stileBottoni,
-                  child: const Text('ESEGUI LOGIN',
-                      style: TextStyle(color: Colors.white)),
+                  child: const Text('LOGIN',
+                      style: TextStyle(color: Colors.white, fontSize: 40)),
                 ),
               ),
+              Expanded(child: Container(),),
               SizedBox(
                 width: 200,
                 child: TextButton(
@@ -63,9 +64,10 @@ class ConfirmLoginScreen extends StatelessWidget {
                                   isFirstSetup: false,
                                 )));
                   },
-                  style: stileBottoni,
+                  //style: stileBottoni,
                   child: const Text('MODIFICA CREDENZIALI',
-                      style: TextStyle(color: Colors.white)),
+                      style: TextStyle(fontSize: 12)
+                  ),
                 ),
               )
             ],
