@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
@@ -20,6 +21,8 @@ Future main() async {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
   }
 }
+
+var payload = Uint8List.fromList(utf8.encode('ut_user=$utUser&ut_pwd=$utPwd'));
 
 class MyAppa extends StatefulWidget {
   const MyAppa({super.key});
@@ -79,6 +82,7 @@ class _MyAppState extends State<MyAppa> {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,9 +118,10 @@ class _MyAppState extends State<MyAppa> {
                   initialUrlRequest: URLRequest(
                     url: Uri.parse(link),
                     method: 'POST',
-                    headers: <String, String>{'Content-Type': 'text/plain'},
-                    body: Uint8List.fromList(
-                        'ut_user=$utUser&ut_pwd=$utPwd'.codeUnits),
+                    headers: <String, String>{'Content-Type': 'text/plain',
+                      'Content-Length': payload.length.toString()
+                    },
+                    body: payload,
                   ),
                   initialOptions: options,
                   pullToRefreshController: pullToRefreshController,
