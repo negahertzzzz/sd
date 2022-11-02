@@ -82,18 +82,9 @@ class _MyAppState extends State<MyAppa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+        /*appBar: AppBar(
           backgroundColor: coloreAppBar,
-          leading: IconButton(
-            icon: const Icon(Icons.home),
-            onPressed: () {
-              //print(utUser+' '+utPwd+' '+link);
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ConfermaLogin()));
-            },
-          ),
+
           title: const Text(''),
           actions: <Widget>[
             IconButton(
@@ -112,7 +103,7 @@ class _MyAppState extends State<MyAppa> {
                 },
                 icon: const Icon(Icons.refresh))
           ],
-        ),
+        ),*/
         body: SafeArea(
             child: Column(children: <Widget>[
           Expanded(
