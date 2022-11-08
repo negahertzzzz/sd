@@ -1,6 +1,9 @@
 # serena_onlus_login
 
-Applicazione di login per pagina web
+Applicazione di login per pagina web molto bella
+Del tipo tanto bella, ma bella tanto ne, del tipo 
+che ti impegni e poi cè un figlio di puttana che
+fa delle pagine web di merda
 
 ## Getting Started
 
