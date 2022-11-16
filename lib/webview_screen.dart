@@ -41,21 +41,14 @@ class _WebViewExampleState extends State<WebViewExample> {
           ],
         ),
         body: WebView(
-          initialUrl: 'https://www.google.com/',
+          initialUrl: 'https://www.google.com',
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) async {
             _controller.complete(webViewController);
 
-            final WebViewRequest request = WebViewRequest(
-              uri: Uri.parse(link),
-              method: WebViewRequestMethod.post,
-              headers: <String, String>{'Content-Type': 'text/plain'},
-              body: Uint8List.fromList('ut_user=$utUser&ut_pwd=$utPwd'.codeUnits),
-            );
-            await webViewController.loadRequest(request);
+           
           },
           onProgress: (int progress) {
-            print(progress);
           },
           javascriptChannels: <JavascriptChannel>{
             _toasterJavascriptChannel(context),
@@ -68,11 +61,8 @@ class _WebViewExampleState extends State<WebViewExample> {
             return NavigationDecision.navigate;
           },
           onPageStarted: (String url) {
-            print(url);
-            s = s + 1;
           },
           onPageFinished: (String url) {
-            print(url);
           },
           gestureNavigationEnabled: true,
           backgroundColor: const Color(0x00000000),

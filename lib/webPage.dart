@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import "package:flutter/material.dart";
 import 'package:dio/dio.dart';
-import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
+//import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -66,7 +66,7 @@ class _WebViewExampleState extends State<WebViewRegistroProfessori> {
       body: Stack(
         children: <Widget>[
           WebView(
-            initialUrl: "www.google.com",
+            initialUrl: "serena-onlus.com/mob/mob.php",
             javascriptMode: JavascriptMode.unrestricted,
             onWebViewCreated: (WebViewController webViewController) async {
               _controller.complete(webViewController);
@@ -153,7 +153,7 @@ class _WebViewExampleState extends State<WebViewRegistroProfessori> {
 
   Future<Directory?> getDownloadDirectory() async {
     if (Platform.isAndroid) {
-      return await DownloadsPathProvider.downloadsDirectory;
+      //return await DownloadsPathProvider.downloadsDirectory;
     }
     return await getApplicationDocumentsDirectory();
   }
