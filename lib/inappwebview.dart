@@ -43,14 +43,14 @@ class _MyAppState extends State<MyAppa> {
   InAppWebViewController? webViewController;
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
       crossPlatform: InAppWebViewOptions(
-      useShouldOverrideUrlLoading: true,
-      mediaPlaybackRequiresUserGesture: false,
+          useShouldOverrideUrlLoading: true,
+          mediaPlaybackRequiresUserGesture: false,
           useOnDownloadStart: true),
       android: AndroidInAppWebViewOptions(
         useHybridComposition: true,
       ),
       ios: IOSInAppWebViewOptions(
-      allowsInlineMediaPlayback: true,
+        allowsInlineMediaPlayback: true,
       ));
 
   late PullToRefreshController pullToRefreshController;
@@ -81,7 +81,6 @@ class _MyAppState extends State<MyAppa> {
   void dispose() {
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -118,32 +117,32 @@ class _MyAppState extends State<MyAppa> {
               initialUrlRequest: URLRequest(
                 url: Uri.parse(link),
                 method: 'POST',
-                    headers: <String, String>{'Content-Type': 'text/plain',
+                headers: <String, String>{
+                  'Content-Type': 'text/plain',
                   'Content-Length': payload.length.toString()
                 },
-                    body: payload,
+                body: payload,
               ),
-                  initialOptions: options,
+              initialOptions: options,
               pullToRefreshController: pullToRefreshController,
               onWebViewCreated: (controller) {
                 webViewController = controller;
-                    if(Platform.isIOS)
-                      controller.postUrl(url: Uri.parse(link), postData: payload);
+                if (Platform.isIOS)
+                  controller.postUrl(url: Uri.parse(link), postData: payload);
               },
-                  onLoadStart: (controller, url) {
+              onLoadStart: (controller, url) {
                 setState(() {
                   this.url = url.toString();
                   urlController.text = this.url;
                 });
               },
-                  androidOnPermissionRequest:
-                      (controller, origin, resources) async {
-                    return PermissionRequestResponse(
-                        resources: resources,
-                        action: PermissionRequestResponseAction.GRANT);
+              androidOnPermissionRequest:
+                  (controller, origin, resources) async {
+                return PermissionRequestResponse(
+                    resources: resources,
+                    action: PermissionRequestResponseAction.GRANT);
               },
-                  shouldOverrideUrlLoading:
-                      (controller, navigationAction) async {
+              shouldOverrideUrlLoading: (controller, navigationAction) async {
                 var uri = navigationAction.request.url!;
 
                 if (![
@@ -174,7 +173,7 @@ class _MyAppState extends State<MyAppa> {
                   urlController.text = this.url;
                 });
               },
-                  onLoadError: (controller, url, code, message) {
+              onLoadError: (controller, url, code, message) {
                 pullToRefreshController.endRefreshing();
               },
               onProgressChanged: (controller, progress) {
@@ -195,8 +194,7 @@ class _MyAppState extends State<MyAppa> {
               onConsoleMessage: (controller, consoleMessage) {
                 //print(consoleMessage);
               },
-                  onDownloadStartRequest:
-                      (controller, downloadStartRequest) async {
+              onDownloadStartRequest: (controller, downloadStartRequest) async {
                 var status = await Permission.storage.status;
 
                 if (!status.isGranted) {
@@ -206,12 +204,12 @@ class _MyAppState extends State<MyAppa> {
 
                 FlutterDownloader.registerCallback(downloadCallback);
                 if (Platform.isAndroid) {
-                      Directory? tempDir =
-                          await DownloadsPathProvider.downloadsDirectory;
+                  Directory? tempDir =
+                      await DownloadsPathProvider.downloadsDirectory;
                   var count = 0;
                   var fileName = downloadStartRequest.suggestedFilename!;
                   var tmpfileName = fileName;
-                      while (await File('${tempDir!.path}/$tmpfileName').exists()) {
+                  while (await File('${tempDir!.path}/$tmpfileName').exists()) {
                     if (count > 0) {
                       tmpfileName = fileName;
                     }
@@ -223,7 +221,7 @@ class _MyAppState extends State<MyAppa> {
                   final taskId = await FlutterDownloader.enqueue(
                     url: downloadStartRequest.url.toString(),
                     fileName: fileName,
-                        savedDir: /*(await getApplicationDocumentsDirectory()).path*/ tempDir!
+                    savedDir: /*(await getApplicationDocumentsDirectory()).path*/ tempDir!
                         .path,
                     showNotification:
                         true, // show download progress in status bar (for Android)
