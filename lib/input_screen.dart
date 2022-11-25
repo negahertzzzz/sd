@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:serena_onlus_login/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'styles.dart';
 import 'package:http/http.dart' as http;
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class InputScreen extends StatefulWidget {
   const InputScreen({Key? key, required this.isFirstSetup}) : super(key: key);
@@ -75,14 +77,60 @@ class _InputScreenState extends State<InputScreen> {
                   width: 200,
                   child: TextButton(
                     onPressed: () async {
-                      bool result = await InternetConnectionChecker().hasConnection;
+                      if (urlController.text.length < 4 ||
+                          userController.text.length < 1 ||
+                          pwdController.text.length < 1) {
+                        Alert(
+                            context: context,
+                            type: AlertType.error,
+                            title: "Attenzione",
+                            desc:
+                                "Devi compilare tutti i campi per continuare",
+                            buttons: [
+                              DialogButton(
+                                onPressed: () => Navigator.pop(context),
+                                color: const Color(0xFF485fa2),
+                                child: const Text(
+                                  "Riprova",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                              ),
+                            ]).show();
+                        return;
+                      }
+                      
+
+                      if((!await canLaunchUrlString(urlController.text)) || !urlController.text.startsWith("https://")){
+                        Alert(
+                            context: context,
+                            type: AlertType.error,
+                            title: "Attenzione",
+                            desc:
+                                "Inserire un url valido.\nRicorda che il link deve inziare con https://",
+                            buttons: [
+                              DialogButton(
+                                onPressed: () => Navigator.pop(context),
+                                color: const Color(0xFF485fa2),
+                                child: const Text(
+                                  "Riprova",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                              ),
+                            ]).show();
+                        return;
+                      }
+
+                      bool result =
+                          await InternetConnectionChecker().hasConnection;
 
                       if (result == false) {
                         showDialog(
                             context: context,
                             builder: (context) {
                               return const AlertDialog(
-                                title: Text("Errore"),
+                                title: Text("Attenzione"),
                                 content: Text(
                                     "Attenzione connessione internet assente "),
                               );
@@ -96,7 +144,6 @@ class _InputScreenState extends State<InputScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: ((context) => const ConfermaLogin())));
-
                       } else {
                         salvaCredenziali();
                         // ignore: use_build_context_synchronously
@@ -121,16 +168,7 @@ class _InputScreenState extends State<InputScreen> {
   void salvaCredenziali() async {
     var preferences = await SharedPreferences.getInstance();
 
-    if (!urlController.text.contains('https://') ||
-        !urlController.text.contains('http://')) {
-      if (urlController.text.contains('https://')) {
-        link = urlController.text;
-      } else if (urlController.text.contains('http://')) {
-        link = urlController.text;
-      } else {
-        link = 'https://${urlController.text}';
-      }
-    }
+    link = urlController.text;
     preferences.setString('ut_user', userController.text);
     preferences.setString('ut_pwd', pwdController.text);
     preferences.setString('link', link);
@@ -158,16 +196,4 @@ Future<bool> checkLogin(user, pwd, link) async {
   } on Exception catch (_) {
     return false;
   }
-}
-
-void loginError(context) {
-  showDialog(
-      context: context,
-      builder: (context) {
-        return const AlertDialog(
-          title: Text("Errore"),
-          content: Text(
-              "Attenzione hai inserito delle credenziali non valide, riprova"),
-        );
-      });
 }
