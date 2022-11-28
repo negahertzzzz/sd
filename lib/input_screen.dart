@@ -107,7 +107,7 @@ class _InputScreenState extends State<InputScreen> {
                             type: AlertType.error,
                             title: "Attenzione",
                             desc:
-                                "Inserire un url valido.\nRicorda che il link deve inziare con https://",
+                                "Inserire un url valido.\nRicorda che il link deve iniziare con https://",
                             buttons: [
                               DialogButton(
                                 onPressed: () => Navigator.pop(context),
